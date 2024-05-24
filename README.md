@@ -1,6 +1,6 @@
 # Импорт данных из Yandex Managed Service for MySQL в Yandex Data Proc с помощью Sqoop
 
-Утилита [Sqoop](https://yandex.cloud/ru/docs/data-proc/operations/sqoop-usage) позволяет импортировать данные из [Managed Service for MySQL](https://yandex.cloud/ru/docs/managed-mysql) в кластер [Yandex Data Proc](https://yandex.cloud/ru/docs/data-proc). В зависимости от конфигурации кластера Yandex Data Proc вы можете выполнить импорт в:
+Утилита [Sqoop](https://yandex.cloud/ru/docs/data-proc/operations/sqoop-usage) позволяет импортировать данные из [Managed Service for MySQL](https://yandex.cloud/ru/docs/managed-mysql) в кластер [Yandex Data Proc](https://yandex.cloud/ru/docs/data-proc). В зависимости от конфигурации кластера Yandex Data Proc вы можете выполнить импорт в одно из следующих хранилищ:
 
 * бакет [Yandex Object Storage](https://yandex.cloud/ru/docs/storage);
 * директорию HDFS;
