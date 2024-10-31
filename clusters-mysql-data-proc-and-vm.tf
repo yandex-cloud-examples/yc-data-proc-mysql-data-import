@@ -1,15 +1,15 @@
-# Infrastructure for the Yandex Cloud Managed Service for MySQL® cluster, Data Proc cluster, and Virtual Machine
+# Infrastructure for the Yandex Cloud Managed Service for MySQL® cluster, Yandex Data Processing cluster, and Virtual Machine
 #
 # RU: https://yandex.cloud/ru/docs/managed-mysql/tutorials/sqoop
 # EN: https://yandex.cloud/en/docs/managed-mysql/tutorials/sqoop
 #
-# Set the configuration of the Managed Service for MySQL® cluster, Managed Service for Data Proc cluster, and Virtual Machine:
+# Set the configuration of the Managed Service for MySQL® cluster, Yandex Data Processing cluster, and Virtual Machine:
 locals {
   folder_id           = ""      # Your folder ID
-  network_id          = ""      # Network ID for the Managed Service for MySQL® cluster, Data Proc cluster, and VM
+  network_id          = ""      # Network ID for the Managed Service for MySQL® cluster, Yandex Data Processing cluster, and VM
   subnet_id           = ""      # Subnet ID (enable NAT for this subnet)
   storage_sa_id       = ""      # Service account ID for creating a bucket in Object Storage
-  data_proc_sa        = ""      # Data Proc service account name. It must be unique in the folder.
+  data_proc_sa        = ""      # Yandex Data Processing service account name. It must be unique in the folder.
   my_cluster_version  = "8.0"   # MySQL® version: 5.7 or 8.0
   my_cluster_db       = "db1"   # Database name
   my_cluster_username = "user1" # Database owner's name
@@ -18,10 +18,10 @@ locals {
   vm_username         = ""      # Username for VM. Images with Ubuntu Linux use the `ubuntu` username by default.
   vm_public_key       = ""      # Full path to the SSH public key for VM
   bucket_name         = ""      # Object Storage bucket name. It must be unique throughout Object Storage.
-  dp_public_key       = ""      # Full path to the SSH public key for the Data Proc Cluster
+  dp_public_key       = ""      # Full path to the SSH public key for the Yandex Data Processing cluster
 }
 
-# Security groups for the Managed Service for MySQL® cluster, Data Proc cluster, and VM
+# Security groups for the Managed Service for MySQL® cluster, Yandex Data Processing cluster, and VM
 
 resource "yandex_vpc_security_group" "cluster-security-group" {
   description = "Security group for the Managed Service for MySQL® cluster"
@@ -40,7 +40,7 @@ resource "yandex_vpc_security_group" "vm-security-group" {
   network_id  = local.network_id
 
   ingress {
-    description    = "Allow SSH connections to VM from the Internet"
+    description    = "Allow SSH connections to VM from the internet"
     protocol       = "TCP"
     port           = 22
     v4_cidr_blocks = ["0.0.0.0/0"]
@@ -56,7 +56,7 @@ resource "yandex_vpc_security_group" "vm-security-group" {
 }
 
 resource "yandex_vpc_security_group" "data-proc-security-group" {
-  description = "Security group for the Data Proc cluster"
+  description = "Security group for the Yandex Data Processing cluster"
   network_id  = local.network_id
 
   ingress {
@@ -83,10 +83,10 @@ resource "yandex_vpc_security_group" "data-proc-security-group" {
   }
 }
 
-# The service account for the Data Proc cluster
+# The service account for the Yandex Data Processing cluster
 
 resource "yandex_iam_service_account" "data-proc-sa" {
-  description = "Service account to manage the Data Proc cluster"
+  description = "Service account to manage the Yandex Data Processing cluster"
   name        = local.data_proc_sa
 }
 
@@ -198,7 +198,7 @@ resource "yandex_compute_instance" "vm-linux" {
 
   network_interface {
     subnet_id = local.subnet_id
-    nat       = true # Required for connection from the Internet
+    nat       = true # Required for connection from the internet
 
     security_group_ids = [
       yandex_vpc_security_group.vm-security-group.id,
@@ -225,10 +225,10 @@ resource "yandex_storage_bucket" "storage-bucket" {
   secret_key = yandex_iam_service_account_static_access_key.bucket-key.secret_key
 }
 
-# Infrastructure for the Data Proc cluster
+# Infrastructure for the Yandex Data Processing cluster
 
 resource "yandex_dataproc_cluster" "my-dp-cluster" {
-  description        = "Data Proc cluster"
+  description        = "Yandex Data Processing cluster"
   depends_on         = [yandex_resourcemanager_folder_iam_binding.dataproc-agent]
   bucket             = yandex_storage_bucket.storage-bucket.bucket
   name               = "my-dp-cluster"
